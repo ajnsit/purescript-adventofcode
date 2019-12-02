@@ -11,12 +11,12 @@ import Data.Show (show)
 import Data.Unit (Unit)
 import Effect (Effect)
 import Effect.Class.Console (log)
-import Util.Input (readInput)
+import Util.Input (readInputLines)
 import Util.Parse (parseInt10)
 
 main :: Effect Unit
 main = do
-  inp <- readInput "inputs/1/1"
+  inp <- readInputLines "inputs/2019/1/1"
   log $ show $ foldl fuelReader 0 inp
 
 fuelReader :: Int -> String -> Int
