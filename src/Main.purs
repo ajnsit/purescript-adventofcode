@@ -10,6 +10,8 @@ import Year2019.Day2.One as Day21
 import Year2019.Day2.Two as Day22
 import Year2019.Day3.One as Day31
 import Year2019.Day3.Two as Day32
+import Year2019.Day4.One as Day41
+import Year2019.Day4.Two as Day42
 
 main :: Effect Unit
 main = do
@@ -22,3 +24,6 @@ main = do
   log "--------------------- Day 3 -------------------------"
   Day31.main
   Day32.main
+  log "--------------------- Day 3 -------------------------"
+  Day41.main
+  Day42.main
