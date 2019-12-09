@@ -3,15 +3,34 @@ module Util.Input where
 import Control.Alternative (pure)
 import Control.Bind (bind)
 import Data.Array (mapMaybe)
+import Data.Array as A
+import Data.Boolean (otherwise)
 import Data.Function (($))
 import Data.Maybe (Maybe)
-import Data.String (Pattern, split)
+import Data.Ord ((<=))
+import Data.String (Pattern, split, splitAt)
+import Data.String as S
 import Data.String.Utils (lines)
 import Effect (Effect)
 import Node.Encoding (Encoding(..))
 import Node.FS.Sync (readTextFile)
 
 newtype Sep a = Sep a
+
+readInput :: String -> Effect String
+readInput filename = readTextFile UTF8 filename
+
+readInputChunked :: Int -> String -> Effect (Array String)
+readInputChunked len filename = do
+  contents <- readTextFile UTF8 filename
+  pure (chunk len contents)
+
+chunk :: Int -> String -> Array String
+chunk len contents
+  | S.length contents <= 0 = []
+  | otherwise =
+      let res = splitAt len contents
+      in A.cons res.before (chunk len res.after)
 
 readInputSep :: Pattern -> String -> Effect (Array String)
 readInputSep pattern filename = do
