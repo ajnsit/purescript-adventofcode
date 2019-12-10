@@ -11,5 +11,8 @@
   "devDependencies": {
     "purescript": "^0.13.5",
     "spago": "^0.12.1"
+  },
+  "dependencies": {
+    "bignumber.js": "^9.0.0"
   }
 }
