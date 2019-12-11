@@ -6,6 +6,8 @@ import Effect (Effect)
 import Effect.Class.Console (log)
 import Year2019.Day1.One as Day11
 import Year2019.Day1.Two as Day12
+import Year2019.Day11.One as Day111
+import Year2019.Day11.Two as Day112
 import Year2019.Day2.One as Day21
 import Year2019.Day2.Two as Day22
 import Year2019.Day3.One as Day31
@@ -52,3 +54,9 @@ main = do
   log "--------------------- Day 9 -------------------------"
   Day91.main
   Day92.main
+  -- log "--------------------- Day 10 ------------------------"
+  -- Day101.main
+  -- Day102.main
+  log "--------------------- Day 11 ------------------------"
+  Day111.main
+  Day112.main
