@@ -12,6 +12,8 @@ import Year2019.Day11.One as Day111
 import Year2019.Day11.Two as Day112
 import Year2019.Day12.One as Day121
 import Year2019.Day12.Two as Day122
+import Year2019.Day13.One as Day131
+import Year2019.Day13.Two as Day132
 import Year2019.Day2.One as Day21
 import Year2019.Day2.Two as Day22
 import Year2019.Day3.One as Day31
@@ -67,3 +69,6 @@ main = do
   log "--------------------- Day 12 ------------------------"
   Day121.main
   Day122.main
+  log "--------------------- Day 13 ------------------------"
+  Day131.main
+  Day132.main

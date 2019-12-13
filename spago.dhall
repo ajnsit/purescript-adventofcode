@@ -4,12 +4,15 @@ You can edit this file as you like.
 -}
 { name = "my-project"
 , dependencies =
-    [ "console"
+    [ "aff"
+    , "ansi"
+    , "console"
     , "debug"
     , "effect"
     , "foreign-object"
     , "functors"
     , "node-fs"
+    , "node-readline"
     , "psci-support"
     , "stringutils"
     ]
