@@ -39,7 +39,12 @@ exports.setNodeRawModeImpl = function(error, success) {
   };
 };
 
-exports.exitProcessImpl = function(error, success) {
+exports.exitProcessImpl = function(error, success) {  if (keystrokeBuffer.length) {
+    success(keystrokeBuffer.shift());
+  } else {
+    needingKeys.push(success);
+  }
+
   process.stdin.setRawMode(false);
   process.stdin.removeAllListeners("keypress");
   process.exit();
