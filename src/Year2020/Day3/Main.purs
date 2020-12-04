@@ -10,6 +10,7 @@ import Data.EuclideanRing (mod)
 import Data.Function (($))
 import Data.Maybe (Maybe(..))
 import Data.Ord ((>=))
+import Data.Semigroup ((<>))
 import Data.Show (show)
 import Data.String as S
 import Data.Unit (Unit)
@@ -20,13 +21,14 @@ import Util.Input (readInputLines)
 main :: Effect Unit
 main = do
   hill <- readInputLines "src/Year2020/Day3/input"
-  log $ show $ ntrees {x:3, y:1} hill
-  log $ show $
+  log $ "Trees along slope (3,1): " <> (show $ ntrees {x:3, y:1} hill)
+  log $ "Product of trees along slopes (1,1), (3,1), (5,1), (7,1), and (1,2): " <> (show $
     ntrees {x:1, y:1} hill
     * ntrees {x:3, y:1} hill
     * ntrees {x:5, y:1} hill
     * ntrees {x:7, y:1} hill
     * ntrees {x:1, y:2} hill
+    )
 
 -- Y: going down
 type Pos = {x::Int, y::Int}

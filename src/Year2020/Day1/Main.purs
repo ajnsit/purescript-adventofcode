@@ -21,9 +21,9 @@ main :: Effect Unit
 main = do
   entries <- map (round <<< unsafeParseInt10) <$> readInputLines "src/Year2020/Day1/input"
   let numberPair = findPair 2020 entries
-  log $ show $ "Part 1 ==> The numbers are " <> show numberPair <> " and the product is " <> show (product numberPair)
+  log $ "Part 1 ==> The numbers are " <> show numberPair <> " and the product is " <> show (product numberPair)
   let numberTriple = findTriple 2020 entries
-  log $ show $ "Part 2 ==> The numbers are " <> show numberTriple <> " and the product is " <> show (product numberTriple)
+  log $ "Part 2 ==> The numbers are " <> show numberTriple <> " and the product is " <> show (product numberTriple)
 
 findPair :: Int -> Array Int -> Array Int
 findPair target = go

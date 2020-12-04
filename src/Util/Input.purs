@@ -8,8 +8,9 @@ import Data.Boolean (otherwise)
 import Data.Function (($))
 import Data.Maybe (Maybe)
 import Data.Ord ((<=))
-import Data.String (Pattern, split, splitAt)
+import Data.String (split, splitAt)
 import Data.String as S
+import Data.String.Pattern (Pattern(..))
 import Data.String.Utils (lines)
 import Effect (Effect)
 import Node.Encoding (Encoding(..))
@@ -46,3 +47,6 @@ readInputLinesReader :: forall a. (String -> Maybe a) -> String -> Effect (Array
 readInputLinesReader reader filename = do
   contents <- readInputLines filename
   pure $ mapMaybe reader contents
+
+readInputParagraphs :: String -> Effect (Array String)
+readInputParagraphs = readInputSep (Pattern "\n\n")
