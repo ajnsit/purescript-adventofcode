@@ -1,19 +1,27 @@
 module AOC.Lib where
 
 import Control.Applicative (pure)
-import Control.Bind (bind, (=<<))
+import Control.Bind (bind, discard, (=<<), (>>=))
+import Control.Monad.ST as ST
+import Control.Monad.ST.Ref as STRef
+import Data.Array ((!!))
 import Data.Array as A
+import Data.Array.NonEmpty (NonEmptyArray)
+import Data.Array.ST as STA
+import Data.Array.ST.Iterator as STAI
 import Data.BigNumber (BigNumber, parseBigNumber)
 import Data.Boolean (otherwise)
+import Data.BooleanAlgebra (not)
 import Data.CommutativeRing ((+))
 import Data.Either (Either(..))
 import Data.Eq ((==))
 import Data.EuclideanRing ((-))
 import Data.Foldable (foldl)
 import Data.Function (($))
-import Data.Functor ((<$>))
+import Data.Functor (void, (<$>))
 import Data.Int (round)
-import Data.Maybe (Maybe(..))
+import Data.Maybe (Maybe(..), fromMaybe)
+import Data.NaturalTransformation (type (~>))
 import Data.Ord ((<=), (>))
 import Data.Semigroup ((<>))
 import Data.Show (show)
@@ -56,7 +64,7 @@ intToBigNumber x = case parseBigNumber (show x) of
   Right y -> y
 
 --------------------------------------------------------------------------------
--- Array splitting
+-- Array Utilities
 
 -- | Split an array into two parts:
 -- |
@@ -77,6 +85,55 @@ spanMap p arr = go 0 []
               else A.slice i (A.length arr) arr
         }
       Just b -> go (i + 1) (A.snoc prev b)
+
+-- | Delete all the given indices from the array
+-- | Skips over any invalid indices
+deleteAll :: forall a. Array Int -> Array a -> Array a
+deleteAll indices arr =
+  foldl (\arr' x -> fromMaybe arr (A.deleteAt x arr')) arr indices
+
+-- | Like Array.groupBy, except it only even compares consecutive elements
+-- | As an example where Array.groupBy would not work - this groupBY can be used to group together runs of consecutive numbers
+-- |   groupBySeq (\a b -> b-a == 1 ) [1,2,3,5,6,9,11,13,14] = [[1,2,3],[5,6],[9],[11],[13,14]]
+-- | Most of this implementation was copied verbatim from the functions in `Data.Array`
+groupBySeq :: forall a. (a -> a -> Boolean) -> Array a -> Array (NonEmptyArray a)
+groupBySeq op xs =
+  ST.run do
+    result <- STA.empty
+    iter <- STAI.iterator (xs !! _)
+    STAI.iterate iter \x -> void do
+      sub <- STA.empty
+      cmp <- STRef.new x
+      _ <- STA.push x sub
+      pushWhile (\z -> do
+                       b <- runOp op cmp z
+                       _ <- STRef.write z cmp
+                       pure b
+                ) iter sub
+      grp <- STA.unsafeFreeze sub
+      STA.push ((unsafeCoerce :: Array ~> NonEmptyArray) grp) result
+    STA.unsafeFreeze result
+  where
+  pushWhile :: forall r. (a -> ST.ST r Boolean) -> STAI.Iterator r a -> STA.STArray r a -> ST.ST r Unit
+  pushWhile p iter array = do
+    break <- STRef.new false
+    ST.while (not <$> STRef.read break) do
+      mx <- STAI.peek iter
+      case mx of
+        Just x -> do
+          b <- p x
+          if b then do
+            _ <- STA.push x array
+            void $ STAI.next iter
+          else
+            void $ STRef.write true break
+        _ ->
+          void $ STRef.write true break
+
+  runOp :: forall r. (a -> a -> Boolean) -> STRef.STRef r a -> a -> ST.ST r Boolean
+  runOp f r a = do
+    b <- STRef.read r
+    pure (f b a)
 
 --------------------------------------------------------------------------------
 -- Text splitting
