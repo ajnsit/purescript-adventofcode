@@ -14,7 +14,7 @@ import Data.Boolean (otherwise)
 import Data.BooleanAlgebra (not)
 import Data.CommutativeRing ((+))
 import Data.Either (Either(..))
-import Data.Eq ((==))
+import Data.Eq (class Eq, (==))
 import Data.EuclideanRing ((-))
 import Data.Foldable (foldl)
 import Data.Function (($))
@@ -48,6 +48,14 @@ iterate i f a
 pipeline :: forall a. a -> Array (a -> a) -> a
 pipeline a fs = foldl (\a' f -> f a') a fs
 
+-- | Apply a function until fixpoint
+untilStable :: forall a. Eq a => (a -> a) -> a -> a
+untilStable f a =
+  let a' = f a
+  in if a == a'
+     then a
+     else untilStable f a'
+
 -- | Convert an either into a maybe
 eitherToMaybe :: forall e a. Either e a -> Maybe a
 eitherToMaybe (Left _) = Nothing
@@ -65,6 +73,20 @@ intToBigNumber x = case parseBigNumber (show x) of
 
 --------------------------------------------------------------------------------
 -- Array Utilities
+
+-- | Returns all final segments of the argument, longest first
+tails :: forall a. Array a -> Array (Array a)
+tails arr = case A.uncons arr of
+  Nothing -> A.singleton arr
+  Just x -> A.cons arr (tails x.tail)
+
+-- | Count the number of elements in an array that match a predicate
+countMatching :: forall a. (a -> Boolean) -> Array a -> Int
+countMatching p = go 0
+  where
+  go n arr = case A.uncons arr of
+    Nothing -> n
+    Just x -> if p x.head then go (n+1) x.tail else go n x.tail
 
 -- | Split an array into two parts:
 -- |

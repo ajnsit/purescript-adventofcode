@@ -1,6 +1,6 @@
 module Year2020.Day10 (part1, part2) where
 
-import AOC.Lib (groupBySeq, intToBigNumber, parseInt10)
+import AOC.Lib (groupBySeq, intToBigNumber, parseInt10, tails)
 import Control.Applicative (pure)
 import Control.Apply ((<*>))
 import Control.Bind (bind, discard)
@@ -17,7 +17,7 @@ import Data.Field (negate)
 import Data.Foldable (maximum, product)
 import Data.Function (($))
 import Data.Functor (map, (<$>))
-import Data.Maybe (Maybe(..), fromMaybe, maybe)
+import Data.Maybe (fromMaybe, maybe)
 import Data.Ord ((<), (<=))
 import Data.Semigroup ((<>))
 import Data.Show (show)
@@ -83,8 +83,3 @@ diff arr = fromMaybe (negate 1) $ (-) <$> arr!!1 <*> arr!!0
 
 count :: Int -> Array Int -> Int
 count x arr = A.length $ A.filter (_==x) arr
-
-tails :: forall a. Array a -> Array (Array a)
-tails arr = case A.uncons arr of
-  Nothing -> A.singleton arr
-  Just x -> A.cons arr (tails x.tail)
