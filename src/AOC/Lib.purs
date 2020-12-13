@@ -74,6 +74,15 @@ intToBigNumber x = case parseBigNumber (show x) of
 --------------------------------------------------------------------------------
 -- Array Utilities
 
+-- | Make an array with the specified start point,
+-- | specified offset between elements, and the specified number of elements
+mkArr :: Int -> Int -> Int -> Array Int
+mkArr start offset items = go start items []
+  where
+  go curr i arr
+    | i <= 0 = arr
+    | otherwise = go (curr+offset) (items-1) (A.cons curr arr)
+
 -- | Returns all final segments of the argument, longest first
 tails :: forall a. Array a -> Array (Array a)
 tails arr = case A.uncons arr of
