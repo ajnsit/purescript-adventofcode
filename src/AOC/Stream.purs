@@ -2,8 +2,11 @@ module AOC.Stream where
 
 import Data.Array as A
 import Data.CommutativeRing (class Semiring, (+))
+import Data.Foldable (class Foldable)
 import Data.Functor (class Functor)
 import Data.Lazy (Lazy, defer, force)
+import Data.Maybe (Maybe(..))
+import Unsafe.Coerce (unsafeCoerce)
 
 data Stream a = Stream a (Lazy (Stream a))
 derive instance functorStream :: Functor Stream
@@ -18,6 +21,12 @@ filter f (Stream a rest) =
 
 find :: forall a. (a -> Boolean) -> Stream a -> a
 find f (Stream a rest) = if f a then a else find f (force rest)
+
+-- foldl (with tail recursion), but with short circuit using Maybes
+fold :: forall b a. (b -> a -> Maybe b) -> b -> Stream a -> b
+fold f b (Stream a l) = case f b a of
+  Just x -> fold f x (force l)
+  Nothing -> b
 
 toArray :: forall a. Stream a -> Array a
 toArray (Stream a rest) = A.cons a (toArray (force rest))

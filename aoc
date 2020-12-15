@@ -1,2 +1,2 @@
 # The `aoc` part is required as the first argument is the name of the script
-node -e "require('./output/AOC.Main').main()" -- aoc "$@"
+node --max-old-space-size=8192 -e "require('./output/AOC.Main').main()" -- aoc "$@"
