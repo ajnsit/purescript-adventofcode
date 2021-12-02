@@ -9,8 +9,6 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "purescript": "^0.13.8",
-    "spago": "^0.17.0"
   },
   "dependencies": {
     "bignumber.js": "^9.0.1",

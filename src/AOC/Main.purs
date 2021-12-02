@@ -2,7 +2,7 @@ module AOC.Main where
 
 import Options.Applicative
 
-import AOC.Lib (inputFileLocationYearDay)
+import AOC.Lib (inputFileLocationYearDay, testFileLocationYearDay)
 import Control.Apply ((<*>))
 import Control.Bind (bind, discard, (=<<))
 import Data.Functor ((<$>))
@@ -18,13 +18,14 @@ type Year = Int
 type Day = Int
 type Part = Int
 type Cookie = String
-data Command = Bootstrap Year Day | Download Year Day | Run Year Day (Maybe Part)
+data Command = Bootstrap Year Day | Download Year Day | Run Year Day (Maybe Part) | Test Year Day (Maybe Part)
 
 configOptions :: Parser Command
 configOptions = subparser
   ( command "bootstrap" (info bootstrapOptions ( progDesc "Bootstrap a solution for a particular day" ))
  <> command "download" (info downloadOptions ( progDesc "Download the puzzle input for a particular day" ))
  <> command "run" (info runOptions ( progDesc "Run the solution for a particular day" ))
+ <> command "test" (info testOptions ( progDesc "Run the solution with the test input for a particular day, the test input must be manually saved in a file called test<day>" ))
   )
 
 bootstrapOptions :: Parser Command
@@ -50,13 +51,24 @@ runOptions =
          <> metavar "PART"
          <> help "Use this to run only part 1 or part 2 from that day. Valid options are 1 or 2" ))
 
+testOptions :: Parser Command
+testOptions =
+  Test
+      <$> argument int ( metavar "YEAR" )
+      <*> argument int ( metavar "DAY" )
+      <*> optional (option int
+         ( long "part"
+         <> short 'p'
+         <> metavar "PART"
+         <> help "Use this to run only part 1 or part 2 from that day. Valid options are 1 or 2" ))
+
 main :: Effect Unit
 main = doit =<< execParser opts
 
 opts :: ParserInfo Command
 opts = info (configOptions <**> helper)
   ( fullDesc
-  <> progDesc "Run a command. One of - bootstrap | download | run"
+  <> progDesc "Run a command. One of - bootstrap | download | run | test"
   <> header "aoc - A Purescript Advent of Code starter kit" )
 
 foreign import aoc_cookie :: Effect String
@@ -71,6 +83,9 @@ doit (Download year day) = do
   EFn.runEffectFn4 download year day cookie loc
 doit (Run year day mpart) = do
   loc <- inputFileLocationYearDay (show year) (show day)
+  EFn.runEffectFn4 run year day (fromMaybe 0 mpart) loc
+doit (Test year day mpart) = do
+  loc <- testFileLocationYearDay (show year) (show day)
   EFn.runEffectFn4 run year day (fromMaybe 0 mpart) loc
 
 

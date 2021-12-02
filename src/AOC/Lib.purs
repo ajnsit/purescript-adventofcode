@@ -197,6 +197,12 @@ inputFileLocationYearDay y d = do
   inputDirectory <- getInputDirectory
   pure $ inputDirectory <> "/year" <> y <> "/day" <> d
 
+-- | The location of the test file, given a year and day
+testFileLocationYearDay :: String -> String -> Effect String
+testFileLocationYearDay y d = do
+  inputDirectory <- getInputDirectory
+  pure $ inputDirectory <> "/year" <> y <> "/test" <> d
+
 -- | Read the entire input file into a single string, given a year and day
 readInputYearDay :: String -> String -> Effect String
 readInputYearDay year day = readTextFile UTF8 =<< inputFileLocationYearDay year day
