@@ -56,6 +56,10 @@ untilStable f a =
      then a
      else untilStable f a'
 
+-- | Apply a function until a predicate is satisfied
+until :: forall a. Eq a => (a -> Boolean) -> (a -> a) -> a -> a
+until p f a = if p a then a else until p f (f a)
+
 -- | Convert an either into a maybe
 eitherToMaybe :: forall e a. Either e a -> Maybe a
 eitherToMaybe (Left _) = Nothing
