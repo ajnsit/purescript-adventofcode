@@ -104,7 +104,7 @@ run :: Array Instr -> Terminate
 run instrs = go {ip:0, acc:0} Set.empty
   where
   go st prev
-    | st.ip `A.elem` prev = Rerun st.acc
+    | st.ip `Set.member` prev = Rerun st.acc
     | otherwise =
         let mst' = step instrs st
         in case mst' of
