@@ -9,7 +9,7 @@ import Data.Array as A
 import Data.Array.NonEmpty (NonEmptyArray)
 import Data.Array.ST as STA
 import Data.Array.ST.Iterator as STAI
-import Data.BigNumber (BigNumber, parseBigNumber)
+-- import Data.BigNumber (BigNumber, parseBigNumber)
 import Data.Boolean (otherwise)
 import Data.BooleanAlgebra (not)
 import Data.CommutativeRing ((+))
@@ -22,6 +22,7 @@ import Data.Functor (void, (<$>))
 import Data.Int (round)
 import Data.Maybe (Maybe(..), fromMaybe)
 import Data.NaturalTransformation (type (~>))
+import Data.Number (isNaN)
 import Data.Ord ((<=), (>))
 import Data.Semigroup ((<>))
 import Data.Show (show)
@@ -29,7 +30,6 @@ import Data.String as S
 import Data.String.Pattern (Pattern)
 import Data.Unit (Unit)
 import Effect (Effect)
-import Global (isNaN)
 import Node.Encoding (Encoding(..))
 import Node.FS.Sync (readTextFile, writeTextFile)
 import Unsafe.Coerce (unsafeCoerce)
@@ -68,12 +68,12 @@ eitherToMaybe (Right a) = Just a
 --------------------------------------------------------------------------------
 -- Bignumber
 
--- HACKY!
--- | Convert an integer into a bignumber
-intToBigNumber :: Int -> BigNumber
-intToBigNumber x = case parseBigNumber (show x) of
-  Left _ -> unsafeCoerce "IMPOSSIBLE: fromInt: INVALID BIGNUM!"
-  Right y -> y
+-- -- HACKY!
+-- -- | Convert an integer into a bignumber
+-- intToBigNumber :: Int -> BigNumber
+-- intToBigNumber x = case parseBigNumber (show x) of
+--   Left _ -> unsafeCoerce "IMPOSSIBLE: fromInt: INVALID BIGNUM!"
+--   Right y -> y
 
 --------------------------------------------------------------------------------
 -- Array Utilities

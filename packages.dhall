@@ -104,23 +104,7 @@ in  upstream
       }
 -------------------------------
 -}
-
 let upstream =
-      https://github.com/purescript/package-sets/releases/download/psc-0.13.8-20201204/packages.dhall sha256:89f184cea1ca40630ea34fb68972589b8eedf4809275686aef85f86abaa2145f
+      https://github.com/purescript/package-sets/releases/download/psc-0.14.5-20211116/packages.dhall sha256:7ba810597a275e43c83411d2ab0d4b3c54d0b551436f4b1632e9ff3eb62e327a
 
 in  upstream
-  with bignumber =
-    { dependencies =
-      [ "either"
-      , "exceptions"
-      , "tuples-native"
-      , "integers"
-      , "functions"
-      , "generics-rep"
-      , "row-extra"
-      ]
-    , repo =
-      "https://github.com/athanclark/purescript-bignumber.git"
-    , version =
-      "v1.0.1"
-    }
