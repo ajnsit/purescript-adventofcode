@@ -3,7 +3,6 @@ module Year2021.Day03 where
 import AOC.Lib (until)
 
 import Control.Apply ((<*>))
-import Control.Bind (discard)
 import Control.Category ((<<<))
 import Data.Array as A
 import Data.CommutativeRing ((*), (+))
