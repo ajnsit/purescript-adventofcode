@@ -2,6 +2,7 @@ module AOC.Lib where
 
 import Control.Applicative (pure)
 import Control.Bind (bind, discard, (=<<))
+import Control.Category (identity)
 import Control.Monad.ST as ST
 import Control.Monad.ST.Ref as STRef
 import Data.Array ((!!))
@@ -13,7 +14,7 @@ import Data.BigNumber (BigNumber, parseBigNumber)
 import Data.Boolean (otherwise)
 import Data.BooleanAlgebra (not)
 import Data.CommutativeRing ((+))
-import Data.Either (Either(..))
+import Data.Either (Either(..), either)
 import Data.Eq (class Eq, (==))
 import Data.EuclideanRing ((-))
 import Data.Foldable (foldl)
@@ -59,6 +60,10 @@ untilStable f a =
 -- | Apply a function until a predicate is satisfied
 until :: forall a. Eq a => (a -> Boolean) -> (a -> a) -> a -> a
 until p f a = if p a then a else until p f (f a)
+
+-- | Apply a function until a Right is returned
+untilEither :: forall a b. Eq a => (a -> Either a b) -> a -> b
+untilEither p a = either (untilEither p) identity (p a)
 
 -- | Convert an either into a maybe
 eitherToMaybe :: forall e a. Either e a -> Maybe a
