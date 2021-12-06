@@ -1,10 +1,10 @@
 module Year2020.Day13 where
 
-import AOC.Lib (parseInt10)
+import AOC.Lib (intToBigNumber, parseInt10)
 import AOC.Stream as Stream
 import Control.Bind ((=<<))
 import Data.Array as A
--- import Data.BigNumber as BN
+import Data.BigNumber as BN
 import Data.Boolean (otherwise)
 import Data.CommutativeRing ((*), (+))
 import Data.Eq ((==))
@@ -45,18 +45,17 @@ part1 input = do
 
 part2 :: String -> Effect Unit
 part2 input = do
-  log "REMOVED due to bignumber missing support"
-  -- let res = lines input
-  -- let buses = map parseInt10 $ S.split (S.Pattern ",") $ fromMaybe "" $ A.head $ A.drop 1 res
-  -- let busOffsets = A.mapMaybe (\ (Tuple i b) -> map (\b' -> Tuple (intToBigNumber b') (intToBigNumber i)) b) $ A.zip (A.range 0 (A.length buses)) buses
-  -- let one = intToBigNumber 1
-  -- log $ "Part 2 ==> " <> show (Tuple.snd $ foldl matchBus (Tuple (negate one) (negate one)) busOffsets)
+  let res = lines input
+  let buses = map parseInt10 $ S.split (S.Pattern ",") $ fromMaybe "" $ A.head $ A.drop 1 res
+  let busOffsets = A.mapMaybe (\ (Tuple i b) -> map (\b' -> Tuple (intToBigNumber b') (intToBigNumber i)) b) $ A.zip (A.range 0 (A.length buses)) buses
+  let one = intToBigNumber 1
+  log $ "Part 2 ==> " <> show (Tuple.snd $ foldl matchBus (Tuple (negate one) (negate one)) busOffsets)
 
 --------------------------------------------------------------------------------
 
--- matchBus :: (Tuple BN.BigNumber BN.BigNumber) -> (Tuple BN.BigNumber BN.BigNumber) -> (Tuple BN.BigNumber BN.BigNumber)
--- matchBus (Tuple b1 o1) (Tuple b2 o2)
---   | b1 < (intToBigNumber 0) = Tuple b2 o2
---   | otherwise =
---     Tuple (b1*b2) $ Stream.find (\t -> ((t + o2) `mod` b2) == zer) $ Stream.inf o1 b1
---   where zer = intToBigNumber 0
+matchBus :: (Tuple BN.BigNumber BN.BigNumber) -> (Tuple BN.BigNumber BN.BigNumber) -> (Tuple BN.BigNumber BN.BigNumber)
+matchBus (Tuple b1 o1) (Tuple b2 o2)
+  | b1 < (intToBigNumber 0) = Tuple b2 o2
+  | otherwise =
+    Tuple (b1*b2) $ Stream.find (\t -> ((t + o2) `mod` b2) == zer) $ Stream.inf o1 b1
+  where zer = intToBigNumber 0

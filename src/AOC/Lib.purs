@@ -1,7 +1,7 @@
 module AOC.Lib where
 
 import Control.Applicative (pure)
-import Control.Bind (bind, discard, (=<<), (>>=))
+import Control.Bind (bind, discard, (=<<))
 import Control.Monad.ST as ST
 import Control.Monad.ST.Ref as STRef
 import Data.Array ((!!))
@@ -9,7 +9,7 @@ import Data.Array as A
 import Data.Array.NonEmpty (NonEmptyArray)
 import Data.Array.ST as STA
 import Data.Array.ST.Iterator as STAI
--- import Data.BigNumber (BigNumber, parseBigNumber)
+import Data.BigNumber (BigNumber, parseBigNumber)
 import Data.Boolean (otherwise)
 import Data.BooleanAlgebra (not)
 import Data.CommutativeRing ((+))
@@ -68,15 +68,21 @@ eitherToMaybe (Right a) = Just a
 --------------------------------------------------------------------------------
 -- Bignumber
 
--- -- HACKY!
--- -- | Convert an integer into a bignumber
--- intToBigNumber :: Int -> BigNumber
--- intToBigNumber x = case parseBigNumber (show x) of
---   Left _ -> unsafeCoerce "IMPOSSIBLE: fromInt: INVALID BIGNUM!"
---   Right y -> y
+-- HACKY!
+-- | Convert an integer into a bignumber
+intToBigNumber :: Int -> BigNumber
+intToBigNumber x = case parseBigNumber (show x) of
+  Left _ -> unsafeCoerce "IMPOSSIBLE: fromInt: INVALID BIGNUM!"
+  Right y -> y
 
 --------------------------------------------------------------------------------
 -- Array Utilities
+
+-- | Split an array into subarrays of equal length
+chunksOf :: forall a. Int -> Array a -> Array (Array a)
+chunksOf n l = case A.uncons l of
+  Nothing -> []
+  Just _ -> A.cons (A.take n l) (chunksOf n (A.drop n l))
 
 -- | Make an array with the specified start point,
 -- | specified offset between elements, and the specified number of elements

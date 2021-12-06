@@ -13,6 +13,7 @@
     "spago": "^0.20.3"
   },
   "dependencies": {
+    "bignumber.js": "^9.0.1",
     "dotenv": "^8.2.0",
     "request": "^2.88.2"
   }
